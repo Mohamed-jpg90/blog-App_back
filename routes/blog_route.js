@@ -7,4 +7,6 @@ const auth = require("../middleware/auth.middleware.js")
 
 route.post("/" ,auth.authentication,blogUpload.single("image"), blogController.createBlog )
 route.get('/', auth.authentication, blogController.showBlog  )
+route.patch('/:id',blogUpload.single("image"),blogController.updateBlog)
+route.delete("/:id",auth.authentication,blogController.createBlog)
 module.exports = route
