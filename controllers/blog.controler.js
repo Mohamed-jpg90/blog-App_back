@@ -55,22 +55,32 @@ const blogController = {
             await blog.save();
             res.send()
         } catch (error) {
-         console.error(error);
+            console.error(error);
 
-  
+
         }
     },
-    deleteBlog : async(req,res)=>{
-      try {
-        const id = req.params.id
-        const blog = Blog.findByIdAndDelete(id)
-res.send()
-      } catch (error) {
-          res.status(500).send({
-        message: error.message,
-        stack: error.stack
-    });
-      }
+    deleteBlog: async (req, res) => {
+        try {
+            const id = req.params.id
+            const blog = Blog.findByIdAndDelete(id)
+            res.send()
+        } catch (error) {
+            res.status(500).send({
+                message: error.message,
+                stack: error.stack
+            });
+        }
+    },
+    getAllBlogs : async (req,res)=>{
+         try {
+            const blogs = await Blog.find({}).populate("owner")
+            res.send(blogs) 
+        } catch (error) {
+            res.status(500)  .send({
+                message: error
+            })
+        }
     }
 }
 

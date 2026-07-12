@@ -29,13 +29,17 @@ const userSchema = new schema({
 
     isAdmin: {
         type: Boolean,
-        default: true
+        default: false
     },
     tokens: [{
         type: String,
         expires: "2d",
         trim: true
-    }]
+    }],
+    image :{
+        type : String,
+        trim : true
+    }
 })
 
 
