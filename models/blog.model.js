@@ -28,7 +28,7 @@ const mongoose= require("mongoose")
     owner:{
         type: mongoose.Types.ObjectId,
         ref:"user",
-        required:true
+        required:false
     }
    })
 

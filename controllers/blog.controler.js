@@ -55,16 +55,40 @@ const blogController = {
             await blog.save();
             res.send()
         } catch (error) {
-            console.error(error);
-
+            res.status(500).send({
+                message: error.message,
+                stack: error.stack
+            });
 
         }
     },
     deleteBlog: async (req, res) => {
         try {
-            const id = req.params.id
-            const blog = Blog.findByIdAndDelete(id)
-            res.send()
+            const id = await req.params.id
+          const blog = await Blog.findById(id);
+               if (!blog) {
+                return res.status(404).send({
+                    message: "Blog not found"
+                });
+            }
+
+          if (blog.image) {
+            const imagePath = path.join(
+                __dirname,
+                "../uploads/blog",
+                blog.image.split("/").pop()
+            );
+
+            fs.unlink(imagePath, (err) => {
+                if (err) console.log(err);
+            });
+        }
+
+            const blogg = await Blog.findByIdAndDelete(id)
+
+        res.status(200).send({
+            message: "Blog deleted successfully"
+        });
         } catch (error) {
             res.status(500).send({
                 message: error.message,
@@ -72,16 +96,47 @@ const blogController = {
             });
         }
     },
-    getAllBlogs : async (req,res)=>{
-         try {
+    getAllBlogs: async (req, res) => {
+        try {
             const blogs = await Blog.find({}).populate("owner")
-            res.send(blogs) 
+            res.send(blogs)
         } catch (error) {
-            res.status(500)  .send({
+            res.status(500).send({
                 message: error
             })
         }
-    }
+    },
+    // deleteBlogsAdmin: async (req, res) => {
+
+    //     try {
+    //         const blog = await Blog.findByIdAndDelete(req.params.id);
+
+    //         if (!blog) {
+    //             return res.status(404).send({
+    //                 message: "Blog not found"
+    //             });
+    //         }
+
+    //          if (blog.image) {
+    //         const imagePath = path.join(
+    //             __dirname,
+    //             "../uploads/blog",
+    //             blog.image.split("/").pop()
+    //         );
+
+    //         fs.unlink(imagePath, (err) => {
+    //             if (err) console.log(err);
+    //         });
+    //     }
+
+    //         res.status(200).send({ message: "Blog deleted successfully " })
+    //     } catch (error) {
+    //         res.status(500).send({
+    //             message: error.message,
+    //             stack: error.stack
+    //         });
+    //     }
+    // }
 }
 
 module.exports = blogController 
